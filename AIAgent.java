@@ -1,5 +1,5 @@
 /*
- * Simple agent
+ * Simple (naive) agent
  */
 
 public class AIAgent extends Agent {
@@ -7,10 +7,12 @@ public class AIAgent extends Agent {
 	String name;
 	
 	AIAgent() {
+		super();
 		constructAIAgent("default");
 	}
 	
 	AIAgent(String inName) {
+		super();
 		constructAIAgent(inName); 
 	}
 	
@@ -34,6 +36,10 @@ public class AIAgent extends Agent {
 			else {
 				System.out.println("Invalid move selection!");
 			}
+			
+			// Wait for response
+			String reply = cAPI.waitMsg(playerIDs.get(i));
+			System.out.println("Game Character Response to Request [" + sel + "]: " + reply);
 		}
 	}
 	

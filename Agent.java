@@ -12,6 +12,8 @@ public abstract class Agent {
 	ArrayList<String> playerIDs;
 	
 	Agent() {
+		System.out.println("Creating agent...");
+		
 		numAvatars = 1;
 	}
 	

@@ -1,4 +1,3 @@
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -79,8 +78,21 @@ public class Connection {
 		return true;
 	}
 	
-	public ArrayList<String> getMsg(String playerID) {
-		return (new ArrayList<String>(queueSet.get(playerID)));
+	// Return the top message from the stack
+	public String popMsg(String playerID) {
+		ArrayList<String> tempAry = new ArrayList<String>(queueSet.get(playerID));
+		if( tempAry.size() == 0 ) {
+			return tempAry.remove(0);
+		}
+		
+		return null;
+	}
+	
+	// Return the whole stack of incoming messages since last check
+	public ArrayList<String> getMsgSet(String playerID) {
+		ArrayList<String> retAry = new ArrayList<String>(queueSet.get(playerID));
+		queueSet.clear();
+		return retAry;
 	}
 
 }

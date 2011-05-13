@@ -1,3 +1,6 @@
+/*
+ * Demo of the use of the Java cAPI Wrapper (interface)
+ */
 
 public class DrunkWalk {
 	public static void main(String argv[]) {
