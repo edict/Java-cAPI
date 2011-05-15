@@ -1,3 +1,4 @@
+import java.awt.Image;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,8 +15,10 @@ public class Connection {
 	ObjectOutputStream transmitter;
 	
 	// For each player ID (string) we store a queue of waiting messages
-	HashMap<String,ArrayList<String>> queueSet;
-	// TODO: Extend to multi-writer. This requires sending an initial msg to
+	// TODO: Consider changing this to use 3 queues per player (Message, Image, Audio) -> or use direct audio streams / video streams
+	HashMap<String,ArrayList<String>> msgQueueSet;
+	// NOTE: Could use BufferedImage (subclass of Image) to allow manipulation later
+	HashMap<String,ArrayList<Image>> imgQueueSet;
 	//	retrieve the pID associated with the connection.
 	HashMap<String,Socket> connectionSet;
 	//Socket connection;
@@ -30,7 +33,8 @@ public class Connection {
 	}
 	
 	public void createConnection(int numAgents) {
-		queueSet = new HashMap<String,ArrayList<String>>();
+		msgQueueSet = new HashMap<String,ArrayList<String>>();
+		imgQueueSet = new HashMap<String,ArrayList<Image>>();
 		
 	    try {
 	    	service = new ServerSocket(portNumber);
@@ -41,7 +45,8 @@ public class Connection {
 	            String pID = receiver.readLine();
 	            
 	            connectionSet.put(pID, tempConnection);
-	            queueSet.put(pID, new ArrayList<String>());
+	            msgQueueSet.put(pID, new ArrayList<String>());
+	            imgQueueSet.put(pID, new ArrayList<Image>());
 	            
 	            ComReadObj in = new ComReadObj(connectionSet.get(pID),this);
 	            Thread reader = new Thread(in);
@@ -80,9 +85,8 @@ public class Connection {
 	
 	// Return the top message from the stack
 	public String popMsg(String playerID) {
-		ArrayList<String> tempAry = new ArrayList<String>(queueSet.get(playerID));
-		if( tempAry.size() == 0 ) {
-			return tempAry.remove(0);
+		if( msgQueueSet.get(playerID).size() == 0 ) {
+			return msgQueueSet.get(playerID).remove(0);
 		}
 		
 		return null;
@@ -90,9 +94,34 @@ public class Connection {
 	
 	// Return the whole stack of incoming messages since last check
 	public ArrayList<String> getMsgSet(String playerID) {
-		ArrayList<String> retAry = new ArrayList<String>(queueSet.get(playerID));
-		queueSet.clear();
+		ArrayList<String> retAry = new ArrayList<String>(msgQueueSet.get(playerID));
+		msgQueueSet.clear();
 		return retAry;
 	}
+	
+	// Return whole stack of images (loss-less)
+	public ArrayList<Image> getImgSet(String playerID) {
+		ArrayList<Image> retAry = new ArrayList<Image>(imgQueueSet.get(playerID));
+		msgQueueSet.clear();
+		return retAry;
+	}
+	
+	// Return the top image from the stack of images (loss-less)
+	public Image getNextImg(String playerID) {
+		if( imgQueueSet.get(playerID).size() == 0 ) {
+			return imgQueueSet.get(playerID).remove(0);
+		}
+		return null;
+	}
 
+	// Return the latest image from the stack of images (loss-full)
+	//  Automatically clears the rest of the stack [req?] -- incl due to typical expected use case
+	public Image getNewestImg(String playerID) {
+		if( imgQueueSet.get(playerID).size() == 0 ) {
+			Image retImg = imgQueueSet.get(playerID).remove(imgQueueSet.size()-1);
+			imgQueueSet.clear();
+			return retImg;
+		}
+		return null;
+	}
 }

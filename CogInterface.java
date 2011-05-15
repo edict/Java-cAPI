@@ -1,3 +1,4 @@
+import java.awt.Image;
 import java.util.ArrayList;
 
 
@@ -22,9 +23,10 @@ public class CogInterface {
 	// ACCESSORS
 	
 	public ArrayList<String> getAgentSet() {
-		return (new ArrayList<String>(link.queueSet.keySet()));
+		return (new ArrayList<String>(link.msgQueueSet.keySet()));
 	}
 	
+	// Messages
 	public String getMsg(String playerID) {
 		return link.popMsg(playerID);
 	}
@@ -33,14 +35,30 @@ public class CogInterface {
 		return link.getMsgSet(playerID);
 	}
 	
-	public String waitMsg(String playerID) {
-		String response = null;
+	public Object waitMsg(String playerID) {
+		Object response = null;
 		while( (response = link.popMsg(playerID)) == null ) {
 			// Do nothing
 		}
 		
 		return response;
 	}
+	
+	// Images
+	public Image getNextImg(String playerID) {
+		return link.getNextImg(playerID);
+	}
+	
+	public Image getNewestImg(String playerID) {
+		return link.getNewestImg(playerID);
+	}
+	
+	public ArrayList<Image> getImgStack(String playerID) {
+		return link.getImgSet(playerID);
+	}
+	
+	// Audio
+	// TODO: Add retrieval for audio streams [or files]
 	
 	// SENSORS ============================================================
 	

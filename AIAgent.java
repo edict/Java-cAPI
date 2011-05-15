@@ -38,8 +38,23 @@ public class AIAgent extends Agent {
 			}
 			
 			// Wait for response
-			String reply = cAPI.waitMsg(playerIDs.get(i));
-			System.out.println("Game Character Response to Request [" + sel + "]: " + reply);
+			Object reply = cAPI.waitMsg(playerIDs.get(i));
+			System.out.println("Game Character Response to Request [" + sel + "]: (Is of type)" + reply.getClass().toString());
+			
+			/*
+			if( reply.getClass() == "String" ) {
+				// Process message
+			else if( reply.getClass() == "Image" ) {
+				// Process image
+			}
+			else if( reply.getClass() == "Audio" ) {
+				// Process audio
+			}
+			else {
+				System.out.println("Unknown data type in stack!");
+			}
+			*/
+			 
 		}
 	}
 	
