@@ -75,6 +75,7 @@ public class CogInterface {
 	// TODO: Support the following
 	
 	// Request the current position of the char
+	// TODO: Support retrieving the location in 2 ways: raw pos or change in position since last req
 	public boolean reqLoc(String playerID) {
 		//
 		link.sendMsg(playerID, "current_location");
@@ -104,28 +105,28 @@ public class CogInterface {
 	// Move the character forward
 	public boolean doMoveForward(String playerID, double dist) {
 		// NOTE: Can use dist or as a single step. Dist could be an int here.
-		link.sendMsg(playerID, "player_move_forward");
+		link.sendMsg(playerID, "player_move_forward/" + dist);
 		return true;
 	}
 	
 	// Move the character backward
 	public boolean doMoveBackward(String playerID, double dist) {
 		// NOTE: Can use dist or as a single step. Dist could be an int here.
-		link.sendMsg(playerID, "player_move_backward");
+		link.sendMsg(playerID, "player_move_backward/" + dist);
 		return true;
 	}
 	
 	// Move the character left (strafe)
 	public boolean doMoveLeft(String playerID, double dist) {
 		// NOTE: Can use dist or as a single step. Dist could be an int here.
-		link.sendMsg(playerID, "player_move_left");
+		link.sendMsg(playerID, "player_move_left/" + dist);
 		return true;
 	}
 	
 	// Move the character right (strafe)
 	public boolean doMoveRight(String playerID, double dist) {
 		// NOTE: Can use dist or as a single step. Dist could be an int here.
-		link.sendMsg(playerID, "player_move_right");
+		link.sendMsg(playerID, "player_move_right/" + dist);
 		return true;
 	}
 	
@@ -192,4 +193,10 @@ public class CogInterface {
 		return true;
 	}
 	
+	/*
+	 * Issues:
+	 *  - How do we handle the following?
+	 *   --> Sustained actions (i.e. hold alt fire or fire down): pass duration?
+	 *   --> 
+	 */
 }
